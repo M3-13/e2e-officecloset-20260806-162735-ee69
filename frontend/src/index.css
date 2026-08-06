@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0F0712;
+  --color-bg-elevated: #1A1024;
+  --color-bg-card: #231836;
+  --color-bg-hover: #2D1F45;
+  --color-fg: #F5EDE0;
+  --color-fg-muted: #ADA0B8;
+  --color-accent: #D4A843;
+  --color-accent-hover: #E8C56D;
+  --color-accent-soft: rgba(212, 168, 67, 0.15);
+  --color-border: #332848;
+  --color-border-accent: #6B5B3A;
+  --color-danger: #E0556A;
+  --color-success: #4CAF8D;
+
+  --font-heading: 'Playfair Display', 'Times New Roman', Georgia, serif;
+  --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
