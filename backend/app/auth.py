@@ -1,11 +1,12 @@
 import os
 from datetime import UTC, datetime, timedelta
 
-from fastapi import HTTPException, Request
+from fastapi import Depends, HTTPException, Request
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+from app.database import get_db
 from app.models import User
 
 ALGORITHM = "HS256"
@@ -36,7 +37,10 @@ def create_access_token(data: dict) -> str:
     return jwt.encode(to_encode, _get_secret_key(), algorithm=ALGORITHM)
 
 
-def get_current_user(request: Request, db: Session) -> User:
+def get_current_user(
+    request: Request,
+    db: Session = Depends(get_db),
+) -> User:
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Not authenticated")

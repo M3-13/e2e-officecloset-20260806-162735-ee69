@@ -1,15 +1,20 @@
 import os
-from pathlib import Path
+import shutil
+import tempfile
 
-_TEST_DB = Path(__file__).resolve().parent / "test_wardrobe.db"
+import pytest
 
-if "DATABASE_URL" not in os.environ:
-    os.environ["DATABASE_URL"] = f"sqlite:///{_TEST_DB}"
+os.environ.setdefault("SECRET_KEY", "test-secret-key-for-tests-only")
 
-if "SECRET_KEY" not in os.environ:
-    os.environ["SECRET_KEY"] = "0123456789abcdef0123456789abcdef"
+_test_db_dir = tempfile.mkdtemp(prefix="test_wardrobe_db_")
+os.environ.setdefault("DATABASE_URL", f"sqlite:///{_test_db_dir}/test.db")
+
+_upload_dir = tempfile.mkdtemp(prefix="test_wardrobe_uploads_")
+os.environ.setdefault("UPLOAD_DIR", _upload_dir)
 
 
-def pytest_sessionstart(session):
-    if _TEST_DB.exists():
-        _TEST_DB.unlink()
+@pytest.fixture(scope="session", autouse=True)
+def _cleanup_temp_dirs():
+    yield
+    shutil.rmtree(_upload_dir, ignore_errors=True)
+    shutil.rmtree(_test_db_dir, ignore_errors=True)
