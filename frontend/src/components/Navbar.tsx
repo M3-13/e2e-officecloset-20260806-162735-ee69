@@ -1,8 +1,11 @@
 import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { isAuthenticated, logout } = useAuth()
+  const navigate = useNavigate()
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `px-4 py-2 rounded-pill text-sm font-medium transition-colors duration-200 ${
@@ -10,6 +13,80 @@ function Navbar() {
         ? 'text-accent bg-accent-soft'
         : 'text-fg-muted hover:text-fg hover:bg-accent-soft'
     }`
+
+  const handleLogout = () => {
+    logout()
+    setMenuOpen(false)
+    navigate('/', { replace: true })
+  }
+
+  const desktopLinks = (
+    <>
+      <NavLink to="/wardrobe" className={linkClass}>
+        Garderobe
+      </NavLink>
+      <NavLink to="/outfits/create" className={linkClass}>
+        Outfit-Creator
+      </NavLink>
+      <NavLink to="/outfits" className={linkClass}>
+        Gespeicherte Outfits
+      </NavLink>
+      {isAuthenticated ? (
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 rounded-pill text-sm font-medium transition-colors duration-200 text-fg-muted hover:text-danger hover:bg-[rgba(224,85,106,0.1)] cursor-pointer"
+        >
+          Logout
+        </button>
+      ) : (
+        <NavLink to="/login" className={linkClass}>
+          Login
+        </NavLink>
+      )}
+    </>
+  )
+
+  const mobileLinks = (
+    <>
+      <NavLink
+        to="/wardrobe"
+        className={linkClass}
+        onClick={() => setMenuOpen(false)}
+      >
+        Garderobe
+      </NavLink>
+      <NavLink
+        to="/outfits/create"
+        className={linkClass}
+        onClick={() => setMenuOpen(false)}
+      >
+        Outfit-Creator
+      </NavLink>
+      <NavLink
+        to="/outfits"
+        className={linkClass}
+        onClick={() => setMenuOpen(false)}
+      >
+        Gespeicherte Outfits
+      </NavLink>
+      {isAuthenticated ? (
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 rounded-pill text-sm font-medium text-left transition-colors duration-200 text-fg-muted hover:text-danger hover:bg-[rgba(224,85,106,0.1)] cursor-pointer"
+        >
+          Logout
+        </button>
+      ) : (
+        <NavLink
+          to="/login"
+          className={linkClass}
+          onClick={() => setMenuOpen(false)}
+        >
+          Login
+        </NavLink>
+      )}
+    </>
+  )
 
   return (
     <nav className="sticky top-0 z-50 h-16 bg-[rgba(15,7,18,0.85)] backdrop-blur-[12px] border-b border-border px-6 flex items-center justify-between">
@@ -22,18 +99,7 @@ function Navbar() {
 
       {/* Desktop links */}
       <div className="hidden md:flex items-center gap-1">
-        <NavLink to="/wardrobe" className={linkClass}>
-          Garderobe
-        </NavLink>
-        <NavLink to="/outfits/create" className={linkClass}>
-          Outfit-Creator
-        </NavLink>
-        <NavLink to="/outfits" className={linkClass}>
-          Gespeicherte Outfits
-        </NavLink>
-        <NavLink to="/login" className={linkClass}>
-          Login
-        </NavLink>
+        {desktopLinks}
       </div>
 
       {/* Mobile hamburger */}
@@ -71,34 +137,7 @@ function Navbar() {
       {menuOpen && (
         <div className="absolute top-16 left-0 right-0 bg-bg-elevated border-b border-border md:hidden">
           <div className="flex flex-col p-4 gap-2">
-            <NavLink
-              to="/wardrobe"
-              className={linkClass}
-              onClick={() => setMenuOpen(false)}
-            >
-              Garderobe
-            </NavLink>
-            <NavLink
-              to="/outfits/create"
-              className={linkClass}
-              onClick={() => setMenuOpen(false)}
-            >
-              Outfit-Creator
-            </NavLink>
-            <NavLink
-              to="/outfits"
-              className={linkClass}
-              onClick={() => setMenuOpen(false)}
-            >
-              Gespeicherte Outfits
-            </NavLink>
-            <NavLink
-              to="/login"
-              className={linkClass}
-              onClick={() => setMenuOpen(false)}
-            >
-              Login
-            </NavLink>
+            {mobileLinks}
           </div>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout.tsx'
+import ProtectedRoute from './components/ProtectedRoute.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LoginPage from './pages/LoginPage.tsx'
 import RegisterPage from './pages/RegisterPage.tsx'
@@ -14,9 +15,30 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/wardrobe" element={<WardrobePage />} />
-        <Route path="/outfits/create" element={<OutfitCreatorPage />} />
-        <Route path="/outfits" element={<OutfitsListPage />} />
+        <Route
+          path="/wardrobe"
+          element={
+            <ProtectedRoute>
+              <WardrobePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/outfits/create"
+          element={
+            <ProtectedRoute>
+              <OutfitCreatorPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/outfits"
+          element={
+            <ProtectedRoute>
+              <OutfitsListPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
     </Routes>
   )
